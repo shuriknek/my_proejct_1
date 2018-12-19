@@ -1,0 +1,11 @@
+
+
+{% load staticfiles %}
+
+ body{
+    background-color: #ccc; /* Цвет фона веб-страницы */
+   } 
+
+p  {
+    color:#ffffff;
+}

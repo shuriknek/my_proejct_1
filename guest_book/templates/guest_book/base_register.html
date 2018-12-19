@@ -1,0 +1,56 @@
+
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+ <link rel= "stylesheet" type= "text/css" href= "{% static 'guest_book/form.css' %}">
+<title>Регистрация</title>
+</head>
+ <body>
+          
+ {% if errors %}
+        <ul>
+            {% for error in errors %}
+                <li style="color:red">{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+       
+              <div id= "page">
+                <div class= "slide-up-boxes">
+                  <a href= "#">                 
+                    <h5 align="center">Регистрация</h5>
+                                     
+                      <div><form  action="{% url 'reg_view' %}" method= "POST"> 
+                        {% csrf_token %}  
+                         <p>login: <input type="text"  name="login" value="{{ login }}"></p>                  
+                         <p>password: <input type="password" name="password" value="{{ password }}"></p> 
+                          <input id="acceptTerms" name="accertTerms" type="checkbox"/>
+                               <label for="accertTerms">
+                              <p>Я соглашаюсь с условиями и Правилами конфиденциальности</p>
+                            </label>  
+                        <button id="registerNew" type="submit">Зарегистрироваться</button>
+                     </form></div> 
+                  </a>                       
+              </div><!--"slide-up-boxes"-->
+           </div><!--"page"--> 
+          <p>{{error}}</p>         
+    </body>
+ </html> 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

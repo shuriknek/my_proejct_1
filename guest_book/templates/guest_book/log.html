@@ -1,0 +1,22 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head> <meta charset="utf-8">
+<link rel= "stylesheet" type= "text/css" href= "#">
+<title>ИДЕНТИФИКАЦИЯ</title>
+</head>
+ <body>
+ {% if errors %}
+        <ul>
+       {% for error in errors %}
+        <li style="color:red"><p>Сожалеем, вы неправильно ввели логин или пароль</p></li>
+           {{ error }}
+         <li style="color:red"> {{ error }}</li>
+       {% endfor %}
+        </ul>
+     {% endif %}  
+     
+     <p style="color:red">НЕТ пароля или имени</p> 
+ </body>
+</html>
