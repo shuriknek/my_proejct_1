@@ -25,7 +25,7 @@ SECRET_KEY = 'j+#ve+l=244$7y=p+7kl0%g6hc!leb-u^&(tgjbg41alk7hw9u'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [ap8.ru]
 
 
 # Application definition
