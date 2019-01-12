@@ -6,6 +6,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
+    url(r'^$', views.serv, name='serv'),
     url(r'^$', views.index, name='index'),
     url(r'^reg_view$', views.reg_view, name='reg_view'),
     url(r'^login_view$', views.login_view,  name='login_view'),

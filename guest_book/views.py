@@ -11,6 +11,8 @@ import datetime
 import sqlite3
 from datetime import timedelta
 
+def serv(request):
+    return render(request, "/")
 
 def index(request):
     return render(request, 'guest_book/base.html')
