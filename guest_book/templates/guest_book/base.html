@@ -15,14 +15,14 @@
    <hr style="color:red">
   </div>
    {% csrf_token %}
-  <p><a href="{% url 'reg_view' %}">Регистрация</a> || <a href="{% url 'login_view' %}">Войти</a> || <a href='#'>Только жалобы</a></p>
+  <p><a href="{% url 'reg_view' %}">Регистрация</a> || <a href="{% url 'login_view' %}">Войти</a> || <a href='#'>жалобы и предложения</a></p>
     <div align=center>
        <table width='100%' cellspacing=0 cellpadding=0 border=0>
         <tr><td colspan=2><img src='/des/std_book_1/1.gif'>
          <tr><td width=45 style='background-image: url("/des/std_book_1/2.gif");background-repeat: repeat-y;width=45px'>&nbsp; 
           <td><div align=center>
           <hr style="color:red">
-          <br><a href='#'>Добавить запись</a> || <a href='#'>Поиск</a> || <a href='#'>Правила</a>
+          <a href='#'>Поиск</a> || <a href="{% url 'regulat_view' %}">Правила</a>
          <br><br>Всего сообщений: 00. Показано 0.0 сообщений 
         <br>Страницы: &nbsp; &nbsp;  [<font color=#dd0000>1</font>] [<a href=/gb/u/exru-3/p/2.html>2</a>] [<a href=/gb/u/exru-3/p/2.html></a>]
        <br>

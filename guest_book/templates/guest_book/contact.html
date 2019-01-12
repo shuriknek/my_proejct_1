@@ -18,7 +18,7 @@
            </td>
             <div align=center>
              <h3>Книга жалоб и предложений</h3>
-               <a href='#'>Поиск</a> || <a href='#'>Правила</a>
+               <a href='#'>Поиск</a> || <a href="{% url 'regulat_view' %}">Правила</a>
                 <br><a href='#'>Только жалобы || предложения</a>
               <br><br>Всего сообщений: 00.<br>
                       Показано 0 сообщений с 00 по 00
@@ -43,7 +43,7 @@
            <form action="{% url 'contact_view' %}" method = 'POST'>
               {% csrf_token %}
             <label>Тема:</label>
-             <p><input type="text" name="subject" value="{{ subject }}"></p>
+             <input type="text" name="subject" value="{{ subject }}">
              <br><br>
 
             <label>Сообщение:</label>
