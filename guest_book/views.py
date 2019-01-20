@@ -97,7 +97,9 @@ def cont_view(request):
 def regulat_view(request):
     return render(request, 'guest_book/regulations.html')
         
-        
+def messag_view(request):
+    mess = ContactForm.objects.all()
+    return render(request,'guest_book/str1.html', {'mess':mess})  
         
         
         

@@ -18,7 +18,6 @@ from django.contrib import admin
 from . import views
 
 urlpatterns = [
-  
     url(r'^', include('guest_book.urls')),
     url(r'^admin/', admin.site.urls),
 ]
