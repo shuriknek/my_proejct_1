@@ -1,4 +1,19 @@
+{% load staticfiles %}
 
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset="utf-8">
+
+<title>Страница сообщений</title>
+</head>
+  <body>
+ {% csrf_token %}
+
+
+{% for m in cont %}
+<p style="color:red">{{ m.cont }}, {{ m.subject }}, {{ m.message }}</p>
+{% endfor %}
  
-<p style="color:green">{{ cont }}</p>
-<p style="color:red">{{ mess }}</p>
+</body>
+</html>

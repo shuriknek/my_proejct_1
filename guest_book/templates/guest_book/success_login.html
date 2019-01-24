@@ -22,6 +22,11 @@
 <br><a href="{% url 'contact_view' %}">Добавить запись</a> || <a href="#">Поиск</a> || <a href="{% url 'regulat_view' %}">Правила</a>
 <br><br>Всего сообщений: 00.|| Показано 1 сообщений с 1 по ...
 <br>Страницы: &nbsp; &nbsp;  [<font color=#dd0000>1</font>]</a>
+
+{% for m in mess %}
+    <p style="color:red"> {{ m.subject }}, {{ m.message }}</p>
+{% endfor %}
+
 <p style="color:red">{{ subject }}</p>
 <p style="color:red">{{ message }}</p>  
 <br>

@@ -12,5 +12,4 @@ urlpatterns = [
     url(r'^contact_view$', views.contact_view, name='contact_view'),
     url(r'^cont_view$', views.cont_view, name='cont_view'),
     url(r'^regulat_view$', views.regulat_view, name='regulat_view'),
-    url(r'^messag_view', views.messag_view, name='messag_view'),
 ]

@@ -91,17 +91,15 @@ def cont_view(request):
         return render(request, 'guest_book/contact.html',
                           {'errors':errors, 'subject':subject, 'message':message}) 
     else:  
-        cont = ContactForm.objects.values_list('id', 'message', 'subject')
-        return render(request, 'guest_book/str1.html', {'cont':cont})  
+        cont = ContactForm.objects.all()
+        return render(request, 'guest_book/str1.html', context=
+                            {'cont':cont,})  
         
 def regulat_view(request):
     return render(request, 'guest_book/regulations.html')
         
-def messag_view(request):
-    mess = ContactForm.objects.all()
-    return render(request,'guest_book/str1.html', {'mess':mess})  
-        
-        
+
+
         
 
 
