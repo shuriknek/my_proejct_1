@@ -34,7 +34,7 @@ def reg_view(request):
                                     {'errors':errors,'login':login,'password':password})
     else: 
         User(login=login, password=password).save()        
-        return render(request,'guest_book/success_login.html') 
+        return render(request,'guest_book/str1.html') 
     
 
 def login_view(request):
@@ -49,7 +49,7 @@ def login_view(request):
         user = User.objects.get(login=request.POST['login'])
         if user.password == request.POST['password']:
             request.session['user_id'] = user.id
-            return render(request, 'guest_book/success_login.html')
+            return render(request, 'guest_book/str1.html')
         else:
              return render(request,'guest_book/log.html') 
     
@@ -78,29 +78,13 @@ def contact_view(request):
                           {'errors':errors, 'subject':subject, 'message':message})                       
     else:  
         ContactForm(subject=subject, message=message).save()
-        return render(request,'guest_book/success_login.html', {'subject':subject, 'message':message})
-                
-def cont_view(request): 
-    errors = []
-    
-    if request.method == 'POST':
-        subject = request.POST.get('subject')   
-        message = request.POST.get('message')
         
-    if errors == None:
-        return render(request, 'guest_book/contact.html',
-                          {'errors':errors, 'subject':subject, 'message':message}) 
-    else:  
         cont = ContactForm.objects.all()
         return render(request, 'guest_book/str1.html', context=
                             {'cont':cont,})  
-        
+       
 def regulat_view(request):
     return render(request, 'guest_book/regulations.html')
         
-
-
-        
-
-
+ 
 

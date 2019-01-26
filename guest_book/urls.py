@@ -10,6 +10,5 @@ urlpatterns = [
     url(r'^reg_view$', views.reg_view, name='reg_view'),
     url(r'^login_view$', views.login_view,  name='login_view'),
     url(r'^contact_view$', views.contact_view, name='contact_view'),
-    url(r'^cont_view$', views.cont_view, name='cont_view'),
     url(r'^regulat_view$', views.regulat_view, name='regulat_view'),
 ]
