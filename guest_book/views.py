@@ -75,16 +75,18 @@ def contact_view(request):
        
     if errors == None:
         return render(request, 'guest_book/contact.html',
-                          {'errors':errors, 'subject':subject, 'message':message})                       
-    else:  
-        ContactForm(subject=subject, message=message).save()
+                          {'errors':errors, 'subject':subject, 'message':message})                         
+    else: 
+        ContactForm(subject=subject, message=message).save() 
         
-        cont = ContactForm.objects.all()
-        return render(request, 'guest_book/str1.html', context=
+    cont = ContactForm.objects.all()    
+    return render(request, 'guest_book/str1.html', context=
                             {'cont':cont,})  
-       
+    
+         
 def regulat_view(request):
     return render(request, 'guest_book/regulations.html')
         
- 
+  
+
 
