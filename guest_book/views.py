@@ -72,7 +72,9 @@ def contact_view(request):
     elif request.method == 'POST':
         subject = request.POST.get('subject')   
         message = request.POST.get('message')
-       
+        now = datetime.datetime.now()
+        html = "It is now %s." % now
+        
     if errors == None:
         return render(request, 'guest_book/contact.html',
                           {'errors':errors, 'subject':subject, 'message':message})                         
@@ -81,12 +83,12 @@ def contact_view(request):
         
     cont = ContactForm.objects.all()    
     return render(request, 'guest_book/str1.html', context=
-                            {'cont':cont,})  
+                            {'cont':cont, 'html':html})
     
          
 def regulat_view(request):
     return render(request, 'guest_book/regulations.html')
         
-  
+ 
 
 

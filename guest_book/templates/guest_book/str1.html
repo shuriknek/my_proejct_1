@@ -24,7 +24,7 @@
  {% csrf_token %}
 
 {% for m in cont %}
-<p style="color:green">{{ m.cont }} {{ m.subject }} {{ m.message }}</p>
+<p style="color:green">{{ m.cont }} {{ m.subject }} {{ m.message }} {{ html }}</p>
 {% endfor %}
  
 </body>

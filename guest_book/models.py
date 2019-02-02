@@ -14,6 +14,7 @@ class Session(models.Model):
 class ContactForm(models.Model):
     subject = models.TextField()
     message = models.TextField()
+    date = models.DateTimeField(auto_now_add=True,blank=True)
     
     def __str__(self):
         return self.name
