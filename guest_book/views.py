@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-#-*- coding:utf-8; -*-
 
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -35,33 +35,65 @@ def reg_view(request):
     else: 
         User(login=login, password=password).save()        
         return render(request,'guest_book/str1.html') 
-    
+
+def set_cookie(response, key, value, days_expire = 7): 
+    key = 'user_login'
+    value = ''
+    max_age = 365 * 24 * 60 * 60  # one year
+    period_life = datetime.timedelta(seconds=max_age) # время хранения куков
+    current_time = datetime.datetime.utcnow()   # текущее явремя в секундах
+    end_time = current_time + period_life  # дата удаления куков
+
+    # переводим в текстовую строку    
+    expires = datetime.datetime.strftime(end_time, "%a, %d-%b-%Y %H:%M:%S GMT")
+    response.set_cookie(key, value, max_age=max_age, 
+                          expires=expires, 
+                          domain=settings.SESSION_COOKIE_DOMAIN, 
+                          secure=settings.SESSION_COOKIE_SECURE or None)
 
 def login_view(request):
-
+    error = ''    
     if request.method == 'GET':
-        return render(request, 'guest_book/login.html')         
+        return render(request, 'guest_book/login.html')
+                 
     elif request.method == 'POST':
         login = request.POST.get('login')
         password = request.POST.get('password')
-        if login == '':
+        
+        error = None
+        # ишим такого пользователя
+        user_s = User.objects.filter(login=login).all()
+        if len(user_s) == 0:
+             return render(request, 'guest_book/log.html')                  	
+        user = user_s[0]        
+        if user.password != password:
             return render(request, 'guest_book/log.html')
-        user = User.objects.get(login=request.POST['login'])
-        if user.password == request.POST['password']:
-            request.session['user_id'] = user.id
-            return render(request, 'guest_book/str1.html')
+                            
+        if error != None: # есть ошибки
+            return render(request, 
+                          'guest_book/login.html', # ВАЖНО login.html
+                          {'error':error, 'login': login, 'password': password})            
         else:
-             return render(request,'guest_book/log.html') 
-    
-def if_user_autorized(request):
-    if request.method == 'POST':
-        if request.session.test_cookie_worked():
-            return HttpResponse('Да есть куки')
-        else:
-            return HttpResponse('Please enable cookies and try again.') 
-    request.session.set_test_cookie()
-    return render(request, 'guest_book/login.html')
-         
+            return render(request, 'guest_book/str1.html',
+                                    {'login': login}) 
+                                               
+             # прикрепляем к нашей html странице еще и куки - обычне переменные 
+            key = 'user_login'  # ВАЖНО user_login
+            value = login
+            
+            max_age = 365 * 24 * 60 * 60  # пусть наша переменная 'user_login' хранится год (365 дней)
+            period_life = datetime.timedelta(seconds=max_age) # время хранения куков
+            current_time = datetime.datetime.utcnow()   			# текущее явремя в секундах
+            end_time = current_time + period_life 
+            
+            expires = datetime.datetime.strftime(end_time, "%a, %d-%b-%Y %H:%M:%S GMT")  # "Wdy, DD-Mon-YY HH:MM:SS GMT"
+            response.set_cookie(key, value, max_age=max_age,
+                                            expires=expires) # дата удаления куков (браузер будет удолять сам) 
+                                        
+            return response
+    else:
+        raise KeyError('Критическая ошибка! - Мы от браузера ждем только GET или POST Запросы! ')                      						
+        
 
 def contact_view(request):
     errors = []
@@ -75,20 +107,52 @@ def contact_view(request):
         now = datetime.datetime.now()
         html = "It is now %s." % now
         
-    if errors == None:
-        return render(request, 'guest_book/contact.html',
-                          {'errors':errors, 'subject':subject, 'message':message})                         
+        key = 'user_login'  # ВАЖНО user_login
+        user_login = request.COOKIES.get(key, None)
+        max_age = 365 * 24 * 60 * 60  # one year
+        period_life = datetime.timedelta(seconds=max_age) # время хранения куков
+        current_time = datetime.datetime.utcnow()   # текущее явремя в секундах
+        end_time = current_time + period_life  # дата удаления куков
+
+       # переводим в текстовую строку    
+        expires = datetime.datetime.strftime(end_time, "%a, %d-%b-%Y %H:%M:%S GMT")
+        response.set_cookie(key, value, max_age=max_age, 
+                            expires=expires, 
+                            domain=settings.SESSION_COOKIE_DOMAIN, 
+                            secure=settings.SESSION_COOKIE_SECURE or None)
+        
+    if user_login == None:
+        return HttpResponse('у вас нет куки user_login! - надо логинится :)')
+    user = User.objects.filter(login=request.POST['login']) 
+    if len(user_s) == 0:
+        return HttpResponse('пользователь ' + value + ' не найден в базе')   
     else: 
         ContactForm(subject=subject, message=message).save() 
         
-    cont = ContactForm.objects.all()    
-    return render(request, 'guest_book/str1.html', context=
-                            {'cont':cont, 'html':html})
-    
-         
+    cont = ContactForm.objects.all()   
+        
+    user = user[0]
+    html = 'добро пожаловать на сайт '  + user.login + '!, ' \
+           '<br />т.к. кроме вас никто другой не может увидить данную страницу' \
+           '<br /> вот вам ваш пароль: ' + user.password  
+    # ну например мы пользоватю показываем его профиль с паролем
+    return HttpResponse(html)
+  
+
+                                         
 def regulat_view(request):
     return render(request, 'guest_book/regulations.html')
-        
  
+
+def cookie_detect_view(request): 
+    response = HttpResponse('вижу вот такие куки из браузера:' + str(dict(request.COOKIES))
+    ) 
+    return response
+
+
+
+
+
+
 
 
