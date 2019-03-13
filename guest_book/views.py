@@ -17,83 +17,95 @@ def index(request):
     return render(request, 'guest_book/base.html')
 
 def reg_view(request):
-    errors = []
+    error = []
     
     if request.method == 'GET':
         return render(request,'guest_book/base_register.html')
     elif request.method == 'POST':
         login = request.POST.get('login')
         password = request.POST.get('password')
+    error = None
     if login == '':
         return HttpResponse("введите ваше имя")
     else:
         if password == '':
                 return HttpResponse("введите ваш пароль")
-    if errors == None:
+    if error != None:
          return render(request,'guest_book/base_register.html',
                                     {'errors':errors,'login':login,'password':password})
     else: 
-        User(login=login, password=password).save()        
+        User(login=login, password=password).save()
         return render(request,'guest_book/str1.html') 
+       
+        
 
-def set_cookie(response, key, value, days_expire = 7): 
+
+
+def set_cookie(response, key, value, days_expire = 7):
     key = 'user_login'
     value = ''
+    #           d    h    m    s
     max_age = 365 * 24 * 60 * 60  # one year
     period_life = datetime.timedelta(seconds=max_age) # время хранения куков
     current_time = datetime.datetime.utcnow()   # текущее явремя в секундах
     end_time = current_time + period_life  # дата удаления куков
-
-    # переводим в текстовую строку    
+    
+    # переводим в текстовую строку
     expires = datetime.datetime.strftime(end_time, "%a, %d-%b-%Y %H:%M:%S GMT")
-    response.set_cookie(key, value, max_age=max_age, 
-                          expires=expires, 
-                          domain=settings.SESSION_COOKIE_DOMAIN, 
-                          secure=settings.SESSION_COOKIE_SECURE or None)
+    response.set_cookie(
+      key, value, 
+      max_age=max_age, 
+      expires=expires, 
+      domain=settings.SESSION_COOKIE_DOMAIN, 
+      secure=settings.SESSION_COOKIE_SECURE or None)
 
 def login_view(request):
-    error = ''    
+    error = ''
+
     if request.method == 'GET':
-        return render(request, 'guest_book/login.html')
-                 
+        return render(request, 'guest_book/login.html') 
+                
     elif request.method == 'POST':
         login = request.POST.get('login')
         password = request.POST.get('password')
         
         error = None
-        # ишим такого пользователя
         user_s = User.objects.filter(login=login).all()
         if len(user_s) == 0:
-             return render(request, 'guest_book/log.html')                  	
-        user = user_s[0]        
+            return HttpResponse("пользователь не найден")
+            
+        user = user_s[0]
         if user.password != password:
-            return render(request, 'guest_book/log.html')
-                            
+              return HttpResponse("пароль не найден")
+          	
         if error != None: # есть ошибки
-            return render(request, 
-                          'guest_book/login.html', # ВАЖНО login.html
-                          {'error':error, 'login': login, 'password': password})            
-        else:
-            return render(request, 'guest_book/str1.html',
-                                    {'login': login}) 
-                                               
-             # прикрепляем к нашей html странице еще и куки - обычне переменные 
+            return render(request, 'guest_book/login.html', # ВАЖНО login.html
+                                  {'error':error, 'login': login, 'password': password})           
+        else: 
+            response = render(request, 'guest_book/str1.html',
+                                           {'login': login}) 
+            # response уже содержит html страницу
             key = 'user_login'  # ВАЖНО user_login
             value = login
-            
+            #           d    h    m    s
             max_age = 365 * 24 * 60 * 60  # пусть наша переменная 'user_login' хранится год (365 дней)
             period_life = datetime.timedelta(seconds=max_age) # время хранения куков
             current_time = datetime.datetime.utcnow()   			# текущее явремя в секундах
-            end_time = current_time + period_life 
-            
+            end_time = current_time + period_life  						# дата удаления куков (браузер будет удолять сам)
+
+            # переводим в текстовую строку
             expires = datetime.datetime.strftime(end_time, "%a, %d-%b-%Y %H:%M:%S GMT")  # "Wdy, DD-Mon-YY HH:MM:SS GMT"
-            response.set_cookie(key, value, max_age=max_age,
-                                            expires=expires) # дата удаления куков (браузер будет удолять сам) 
-                                        
+            response.set_cookie(key, value, 
+                                max_age=max_age,
+                                expires=expires)
+            # max_age количество секунд или None (по-умолчанию), если cookie должна существовать до закрытия браузера. 
+            # expires должен быть строкой в формате "Wdy, DD-Mon-YY HH:MM:SS GMT" или объект datetime.datetime в UTC.
+            
+            # возвращаем html страницу пользователю
             return response
     else:
-        raise KeyError('Критическая ошибка! - Мы от браузера ждем только GET или POST Запросы! ')                      						
-        
+        return render(request,'guest_book/login.html')  
+           
 
 def contact_view(request):
     errors = []
@@ -117,7 +129,7 @@ def contact_view(request):
        # переводим в текстовую строку    
         expires = datetime.datetime.strftime(end_time, "%a, %d-%b-%Y %H:%M:%S GMT")
         response.set_cookie(key, value, max_age=max_age, 
-                            expires=expires, 
+                            expires=expires, HttpOnly = True,
                             domain=settings.SESSION_COOKIE_DOMAIN, 
                             secure=settings.SESSION_COOKIE_SECURE or None)
         
@@ -143,6 +155,21 @@ def contact_view(request):
 def regulat_view(request):
     return render(request, 'guest_book/regulations.html')
  
+def set_cookie(response, key, value, days_expire = 7): 
+    if days_expire is None: 
+        max_age = 365 * 24 * 60 * 60 #one year 
+    else: 
+        max_age = days_expire = 24 * 60 * 60
+        expires = datetime.datetime.strftime(datetime.datetime.utcnow() + datetime.timedelta(seconds=max_age), "%a, %d-%b-%Y %H:%M:%S GMT") 
+        response.set_cookie(key, value, max_age=max_age,
+                               expires=expires)
+                              
+
+def cookie_set_view (request): 
+    response = HttpResponse("hello") 
+    response.set_cookie('my_cookie_var','123')
+    response.set_cookie('website_text', 'zdes bil site na django')   
+    return response
 
 def cookie_detect_view(request): 
     response = HttpResponse('вижу вот такие куки из браузера:' + str(dict(request.COOKIES))
@@ -151,8 +178,5 @@ def cookie_detect_view(request):
 
 
 
-
-
-
-
+ 
 
