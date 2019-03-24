@@ -84,7 +84,8 @@ def login_view(request):
                           {'error':error, 'login': login, 'password': password}) 
         else: 
             response = render(request, 'guest_book/str1.html',
-                                           {'login': login}) 
+                                              {'login': login})
+                                            
             # response уже содержит html страницу
             key = 'user_login'  # ВАЖНО user_login
             value = login
@@ -102,9 +103,10 @@ def login_view(request):
             # expires должен быть строкой в формате "Wdy, DD-Mon-YY HH:MM:SS GMT" или объект datetime.datetime в UTC.
             
             # возвращаем html страницу пользователю
-            return response     
+            return response
+            
     else:
-        return render(request,'guest_book/login.html')  
+        return render(request,'guest_book/login.html') 
     
 def verify_login(request):
 
@@ -125,8 +127,11 @@ def verify_login(request):
     html = 'добро пожаловать на сайт '  + user.login + '!, ' \
            '<br />т.к. кроме вас никто другой не может увидить данную страницу' \
            '<br /> вот вам ваш пароль: ' + user.password  
-  
-    return HttpResponse(html)
+
+    return render(request, 'guest_book/str2.html',
+                            { 'html':html }) 
+                             
+    
     
    
 def contact_view(request):
@@ -155,25 +160,6 @@ def contact_view(request):
 def regulat_view(request):
     return render(request, 'guest_book/regulations.html')
 #------------------------------------------------------------------------------------ 
-def set_cookie(response, key, value, days_expire = 7): 
-    if days_expire is None: 
-        max_age = 365 * 24 * 60 * 60 #one year 
-    else: 
-        max_age = days_expire = 24 * 60 * 60
-        expires = datetime.datetime.strftime(datetime.datetime.utcnow() + datetime.timedelta(seconds=max_age), "%a, %d-%b-%Y %H:%M:%S GMT") 
-        response.set_cookie(key, value, max_age=max_age,
-                               expires=expires)
-                              
-def cookie_set_view (request): 
-    response = HttpResponse("hello") 
-    response.set_cookie('my_cookie_var','123')
-    response.set_cookie('website_text', 'zdes bil site na django')   
-    return response
-
-def cookie_detect_view(request): 
-    response = HttpResponse('вижу вот такие куки из браузера:' + str(dict(request.COOKIES))
-    ) 
-    return response
 
 
 
