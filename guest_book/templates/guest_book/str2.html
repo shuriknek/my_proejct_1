@@ -1,4 +1,5 @@
 {% load staticfiles %}
+
 <!DOCTYPE html>
 <html lange="en">
 <head>
@@ -16,6 +17,15 @@
  <h2>Книга жалоб и предложений</h2>
  <p style="color:red">Добро пожаловать на сайт</p>
  <p><a href="{% url 'contact_view' %}">Добавить запись</a><br>
-<p style="color:green">{{ html }}</p>
+{% block title %}
+ Tracking User - {{ block.supper }}
+{% endblock %}
+ 
+{% if not request.COOKIES.user_login %}
+  <p>This is your first visit to the site. From now on I will track your visits to this site.</p>
+{% else %}
+ <p>This is your {{ request.COOKIES.user_login|add:'1'}} user_login</p>
+{% endif %} 
+
 </body>
 </html>

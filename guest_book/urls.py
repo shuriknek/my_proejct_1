@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^regulat_view$', views.regulat_view, name='regulat_view'),
     url(r'^set_cookie$', views.set_cookie, name='set_cookie'),   
     url(r'^stop_tracking', views.stop_tracking, name='stop_tracking'),
+    url(r'^track_user', views.track_user, name='track_user'),
 ]   

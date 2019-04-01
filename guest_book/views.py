@@ -110,7 +110,18 @@ def stop_tracking(request):
     else:
         response = HttpResponse("Мы не отслеживаем вас")
     return response
-          
+
+def track_user(request):
+    response = render(request, 'guest_book/str1.html')
+    if not request.COOKIES.get('user_login'):
+        response.set_cookie('user_login', '1', 3600 * 24 * 365 * 2)
+    else:
+        user_login = int(request.COOKIES.get('user_login', '1')) + 1
+        response.set_cookie('user_login', str(user_login), 3600 * 24 * 365 * 2)
+    return response
+
+
+         
 def contact_view(request):
     errors = []
     
