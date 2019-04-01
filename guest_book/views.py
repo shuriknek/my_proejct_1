@@ -38,9 +38,6 @@ def reg_view(request):
         User(login=login, password=password).save()
         return render(request,'guest_book/str1.html') 
        
-        
-
-
 
 def set_cookie(response, key, value, days_expire = 7):
     key = 'user_login'
@@ -54,16 +51,14 @@ def set_cookie(response, key, value, days_expire = 7):
     # переводим в текстовую строку
     expires = datetime.datetime.strftime(end_time, "%a, %d-%b-%Y %H:%M:%S GMT")
     response.set_cookie(key, value, max_age=max_age, 
-      expires=expires, httponly=True,
-      domain=settings.SESSION_COOKIE_DOMAIN, 
-      secure=settings.SESSION_COOKIE_SECURE or None)
-
+                         expires=expires, httponly=True)
+   
 def login_view(request):
     error = ''
-
+    
     if request.method == 'GET':
         return render(request, 'guest_book/login.html') 
-                
+    
     elif request.method == 'POST':
         login = request.POST.get('login')
         password = request.POST.get('password')
@@ -77,63 +72,45 @@ def login_view(request):
         user = user_s[0]   
         if user.password != password:
           return HttpResponse("Неверный логин/пароль")
-          
-        if error != None: # есть ошибки
-            return render(request, 
-                          'guest_book/login.html', 
-                          {'error':error, 'login': login, 'password': password}) 
+                     
+        if error != None: # есть ошибки 
+            return render(request, 'guest_book/login.html', 
+                          {'error':error, 'login': login, 'password': password})
         else: 
-            response = render(request, 'guest_book/str1.html',
-                                              {'login': login})
-                                            
+            response = render(request, 'guest_book/str1.html',  # ВАЖНО success_login.html
+                                                  {'login': login}) 
             # response уже содержит html страницу
+            
+            # https://djbook.ru/rel1.9/ref/request-response.html#django.http.HttpResponse.set_cookie
+            
+            # прикрепляем к нашей html странице еще и куки - обычне переменные 
             key = 'user_login'  # ВАЖНО user_login
             value = login
             #           d    h    m    s
             max_age = 365 * 24 * 60 * 60  # пусть наша переменная 'user_login' хранится год (365 дней)
             period_life = datetime.timedelta(seconds=max_age) # время хранения куков
-            current_time = datetime.datetime.utcnow()   			# текущее явремя в секундах
-            end_time = current_time + period_life  						# дата удаления куков (браузер будет удолять сам)
+            current_time = datetime.datetime.utcnow()  # текущее явремя в секундах
+            end_time = current_time + period_life  # дата удаления куков (браузер будет удолять сам)
 
             # переводим в текстовую строку
             expires = datetime.datetime.strftime(end_time, "%a, %d-%b-%Y %H:%M:%S GMT")  # "Wdy, DD-Mon-YY HH:MM:SS GMT"
-            response.set_cookie(key, value, max_age=max_age,
+            response.set_cookie(key, value, 
+                                max_age=max_age,
                                 expires=expires)
             # max_age количество секунд или None (по-умолчанию), если cookie должна существовать до закрытия браузера. 
             # expires должен быть строкой в формате "Wdy, DD-Mon-YY HH:MM:SS GMT" или объект datetime.datetime в UTC.
             
             # возвращаем html страницу пользователю
             return response
-            
+
+def stop_tracking(request):
+    if request.COOKIES.get('user_login'):
+        response = HttpResponse("Cookies Cleared")
+        response.delete_cookie('user_login')
     else:
-        return render(request,'guest_book/login.html') 
-    
-def verify_login(request):
-
-    if request.method != 'GET': 
-        raise KeyError('Критическая ошибка! - Мы от браузера ждем только GET запрос, ! ')
-        
-    key = 'user_login'
-    login = request.COOKIES.get(key, None)   
-              
-    if login == None:
-        return HttpResponse('у вас нет куки user_login! - надо логинится :)')
-        
-    user_s = User.objects.filter(login=login).all()
-    if len(user_s) == 0:
-        return HttpResponse('пользователь ' + value + ' не найден в базе')
-    
-    user = user_s[0]
-    html = 'добро пожаловать на сайт '  + user.login + '!, ' \
-           '<br />т.к. кроме вас никто другой не может увидить данную страницу' \
-           '<br /> вот вам ваш пароль: ' + user.password  
-
-    return render(request, 'guest_book/str2.html',
-                            { 'html':html }) 
-                             
-    
-    
-   
+        response = HttpResponse("Мы не отслеживаем вас")
+    return response
+          
 def contact_view(request):
     errors = []
     
@@ -161,7 +138,34 @@ def regulat_view(request):
     return render(request, 'guest_book/regulations.html')
 #------------------------------------------------------------------------------------ 
 
+   
+   
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
+         
 
 
  
+
+
+
+
 
