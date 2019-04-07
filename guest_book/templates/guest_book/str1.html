@@ -23,16 +23,6 @@
 <br>Страницы: &nbsp; &nbsp;  [<font color=#dd0000>1</font>]</a>
  {% csrf_token %}
 
-{% block title %}
- Tracking User - {{ block.supper }}
-{% endblock %}
- 
-{% if not request.COOKIES.user_login %}
-  <p>This is your first visit to the site. From now on I will track your visits to this site.</p>
-{% else %}
- <p>This is your {{ request.COOKIES.user_login|add:'1'}} user_login</p>
-{% endif %} 
-
 {% for m in cont %}
 <p style="color:green">{{ m.cont }} {{ m.subject }} {{ m.message }} {{ html }}</p>
 {% endfor %}

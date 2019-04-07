@@ -6,7 +6,12 @@
 <link rel= "stylesheet" type= "text/css" href= "#">
 <title>ИДЕНТИФИКАЦИЯ</title>
 </head>
- <body>    
-     <p style="color:red">НЕТ пароля или имени</p> 
+ <body>
+{% csrf_token %}
+    <div align=center>
+        <h2>Книга жалоб и предложений</h2>    
+     <p style="color:red">"у вас нет куки user_login! - надо логинится"</p> 
+     <p style="color:red">Для входа нажмите<a href="{% url 'login_view' %}">Здеся</a></p>
+    </div>
  </body>
 </html>

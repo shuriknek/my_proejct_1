@@ -1,0 +1,16 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lange="en">
+<head>
+<title>Книга жалоб и предложений</title>
+<meta charset="utf-8">
+</head>
+ <body>
+{% csrf_token %}
+    <div align=center>
+      <h2>Книга жалоб и предложений</h2>
+         <p style="color:red">Вы вышли из системы нажмите<a href="{% url 'login_view' %}">Здеся</a>что-бы зайти снова</p>
+    </div>
+</body>
+</html>
