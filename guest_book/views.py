@@ -9,7 +9,6 @@ from django.contrib import auth
 from .models import User
 from .models import ContactForm
 from .models import Session
-from django.contrib.sessions.models import Session
 import datetime
 import sqlite3
 from datetime import timedelta
@@ -34,21 +33,20 @@ def reg_view(request):
                 return HttpResponse("введите ваш пароль")
     if error != None:
          return render(request,'guest_book/base_register.html',
-                                    {'errors':errors,'login':login,'password':password})
+                                    {'error':error,'login':login,'password':password})
     else: 
         User(login=login, password=password).save()
         return render(request,'guest_book/str1.html') 
           
-def set_cookie(response, key, value, days_expire = 7):
+def set_cookie(response, key, value, days_expire = 3):
     key = 'user_login'
     value = ''
-    #           d    h    m    s
-    max_age = 365 * 24 * 60 * 60  # one year
-    period_life = datetime.timedelta(seconds=max_age) # время хранения куков
-    current_time = datetime.datetime.utcnow()   # текущее явремя в секундах
-    end_time = current_time + period_life  # дата удаления куков
+ 
+    max_age = 365 * 24 * 60 * 60  
+    period_life = datetime.timedelta(seconds=max_age) 
+    current_time = datetime.datetime.utcnow()  
+    end_time = current_time + period_life 
     
-    # переводим в текстовую строку
     expires = datetime.datetime.strftime(end_time, "%a, %d-%b-%Y %H:%M:%S GMT")
     response.set_cookie(
       key, value, 
@@ -77,28 +75,23 @@ def login_view(request):
               return HttpResponse("Неверный логин/пароль")
           	
         if error != None: # есть ошибки
-            return render(request, 'guest_book/login.html', # ВАЖНО login.html
+            return render(request, 'guest_book/login.html',
                                   {'error':error, 'login': login, 'password': password})           
         else: 
             response = render(request, 'guest_book/str1.html',
                                            {'login': login}) 
-            # response уже содержит html страницу
-            key = 'user_login'  # ВАЖНО user_login
+           
+            key = 'user_login' 
             value = login
-            #           d    h    m    s
-            max_age = 365 * 24 * 60 * 60  # пусть наша переменная 'user_login' хранится год (365 дней)
-            period_life = datetime.timedelta(seconds=max_age) # время хранения куков
-            current_time = datetime.datetime.utcnow()   			# текущее явремя в секундах
-            end_time = current_time + period_life  						# дата удаления куков (браузер будет удолять сам)
+            max_age = 365 * 24 * 60 * 60  
+            period_life = datetime.timedelta(seconds=max_age) 
+            current_time = datetime.datetime.utcnow()   			
+            end_time = current_time + period_life  						
 
-            # переводим в текстовую строку
-            expires = datetime.datetime.strftime(end_time, "%a, %d-%b-%Y %H:%M:%S GMT")  # "Wdy, DD-Mon-YY HH:MM:SS GMT"
+           
+            expires = datetime.datetime.strftime(end_time, "%a, %d-%b-%Y %H:%M:%S GMT") 
             response.set_cookie(key, value, max_age=max_age,
                                 expires=expires)
-            # max_age количество секунд или None (по-умолчанию), если cookie должна существовать до закрытия браузера. 
-            # expires должен быть строкой в формате "Wdy, DD-Mon-YY HH:MM:SS GMT" или объект datetime.datetime в UTC.
-            
-            # возвращаем html страницу пользователю
             return response     
     else:
         return render(request,'guest_book/login.html')  
@@ -106,14 +99,14 @@ def login_view(request):
 
 def login_verification(request):
   
-     if request.method != 'GET': # от нас просят HTML страницу
+     if request.method != 'GET': 
         raise KeyError('Критическая ошибка! - Мы от браузера ждем только GET запрос, ! ')
     
-     key = 'user_login'  # ВАЖНО user_login
+     key = 'user_login'  
      login = request.COOKIES.get(key, None)
     
      if login == None:
-         return HttpResponse('у вас нет куки user_login! - надо логинится!')
+         return render(request, 'guest_book/log.html')
     
      user_s = User.objects.filter(login=login).all()
      if len(user_s) == 0:
@@ -121,11 +114,11 @@ def login_verification(request):
     
      user = user_s[0]
      html = 'добро пожаловать на сайт '  + user.login + '!, ' \
-           '<br />т.к. кроме вас никто другой не может увидить данную страницу' \
-           '<br /> вот вам ваш пароль: ' + user.password  
-    # ну например мы пользоватю показываем его профиль с паролем
-     return HttpResponse(html)
-         
+                '<br /> т.к. кроме вас никто другой не может увидить данную страницу' \
+                '<br /> вот вам ваш пароль: ' + user.password  
+     return render(request, 'guest_book/reg.html',  {'html':html}) 
+                                                   
+       
 def contact_view(request):
     errors = []
     

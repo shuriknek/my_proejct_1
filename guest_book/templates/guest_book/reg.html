@@ -5,25 +5,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
- <link rel= "stylesheet" type= "text/css" href= "{% static 'guest_book/form.css' %}">
+
 <title>Регистрация</title>
 </head>
  <body>
-    {% if errors %}
-        <ul>
-            {% for error in errors %}
-                <li style="color:red">{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-
-  <div><form  action="{% url 'reg_view' %}" method= "POST"> 
-    {% csrf_token %}  
-    <p>Для входа в систему - зарегистрируйтесь!</p>
-    <p>Введите ваше имя:<input type="text" name="username">
-    <p>Введите ваш пароль:<input type="password" name="password">
-    <button  type="submit">Зарегистрироваться</button>
-   </div></form> 
-   <p>{{error}}</p>          
+   
+   <div align="center">
+      <p style="color:green">{{ html }}</p>
+   </div>
 </body>
 </html>
