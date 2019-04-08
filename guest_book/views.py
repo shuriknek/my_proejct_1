@@ -19,7 +19,7 @@ def index(request):
     return render(request, 'guest_book/base.html')
 
 def reg_view(request):
-    error = []
+    errors = []
     
     if request.method == 'GET':
         return render(request,'guest_book/base_register.html')
@@ -31,14 +31,14 @@ def reg_view(request):
     else:
         if password == '':
                 return HttpResponse("введите ваш пароль")
-    if error != None:
+    if errors == None:
          return render(request,'guest_book/base_register.html',
-                                    {'error':error,'login':login,'password':password})
+                                    {'errors':errors,'login':login,'password':password})
     else: 
-        User(login=login, password=password).save()
-        return render(request,'guest_book/str1.html') 
-          
-def set_cookie(response, key, value, days_expire = 3):
+        User(login=login, password=password).save()        
+        return render(request,'guest_book/str1.html')  
+  
+def set_cookie(response, key, value, days_expire = 7):
     key = 'user_login'
     value = ''
  
