@@ -76,55 +76,54 @@ def login_view(request):
           	
         if error != None: # есть ошибки
             return render(request, 'guest_book/login.html',
-                                  {'error':error, 'login': login, 'password': password})           
-        else: 
-            response = render(request, 'guest_book/str1.html',
-                                           {'login': login}) 
-           
-            key = 'user_login' 
+                                  {'error':error, 'login': login, 'password': password})                          
+        else:
+            response = render(request, 'guest_book/str1.html')
+                                            
+            key = 'user_login'                        
             value = login
+            
             max_age = 365 * 24 * 60 * 60  
             period_life = datetime.timedelta(seconds=max_age) 
             current_time = datetime.datetime.utcnow()   			
-            end_time = current_time + period_life  						
-
-           
+            end_time = current_time + period_life  						           
             expires = datetime.datetime.strftime(end_time, "%a, %d-%b-%Y %H:%M:%S GMT") 
             response.set_cookie(key, value, max_age=max_age,
                                 expires=expires)
-            return response     
+            return response    
     else:
         return render(request,'guest_book/login.html')  
 #---------------------------------------------------------------------------------------------
 
 def login_verification(request):
-  
-     if request.method != 'GET': 
-        raise KeyError('Критическая ошибка! - Мы от браузера ждем только GET запрос, ! ')
+
+    if request.method != 'GET': 
+        return render(request, 'guest_book/log_verific.html') 
+                   
+    key = 'user_login'
+    login = request.COOKIES.get(key, None)
     
-     key = 'user_login'  
-     login = request.COOKIES.get(key, None)
+    if login == None:
+        return render(request, 'guest_book/log_verific.html')
     
-     if login == None:
-         return render(request, 'guest_book/log.html')
+    user_s = User.objects.filter(login=login).all()
+    if len(user_s) == 0:
+        return HttpResponse('пользователь ' + value + ' не найден в базе')
     
-     user_s = User.objects.filter(login=login).all()
-     if len(user_s) == 0:
-         return HttpResponse('пользователь ' + value + ' не найден в базе')
+    user = user_s[0]
+    html = 'добро пожаловать на сайт '  + user.login + '!, ' \
+           '<br />т.к. кроме вас никто другой не может увидить данную страницу' \
+           '<br /> вот вам ваш пароль: ' + user.password  
+   
+    return render(request, 'guest_book/contact.html',{'html':html})
     
-     user = user_s[0]
-     html = 'добро пожаловать на сайт '  + user.login + '!, ' \
-                '<br /> т.к. кроме вас никто другой не может увидить данную страницу' \
-                '<br /> вот вам ваш пароль: ' + user.password  
-     return render(request, 'guest_book/reg.html',  {'html':html}) 
-                                                   
-       
+    
 def contact_view(request):
     errors = []
-    
-    if request.method == 'GET':
-        return render(request,'guest_book/contact.html')
         
+    if request.method == 'GET':
+        return render(request,'guest_book/contact.html')  
+                   
     elif request.method == 'POST':
         subject = request.POST.get('subject')   
         message = request.POST.get('message')
@@ -139,19 +138,16 @@ def contact_view(request):
         
     cont = ContactForm.objects.all()    
     return render(request, 'guest_book/str1.html', context=
-                            {'cont':cont, 'html':html}) 
+                                        {'cont':cont, 'html':html}) 
                              
-                                                                  
+                                                                                     
 def regulat_view(request):
     return render(request, 'guest_book/regulations.html')
 #------------------------------------------------------------------------------------             
 
          
         
-    
-        
-        
-        
+   
         
         
         
