@@ -122,8 +122,19 @@ def contact_view(request):
     errors = []
         
     if request.method == 'GET':
-        return render(request,'guest_book/contact.html')  
-                   
+        return render(request,'guest_book/contact.html') 
+ 
+    key = 'user_login'
+    login = request.COOKIES.get(key, None)
+    
+    if login == None:
+        return render(request, 'guest_book/log_verific.html')
+    
+    user_s = User.objects.filter(login=login).all()
+
+    if len(user_s) == 0:
+        return HttpResponse('пользователь ' + value + ' не найден в базе')
+
     elif request.method == 'POST':
         subject = request.POST.get('subject')   
         message = request.POST.get('message')
@@ -132,11 +143,18 @@ def contact_view(request):
         
     if errors == None:
         return render(request, 'guest_book/contact.html',
-                          {'errors':errors, 'subject':subject, 'message':message})                         
+                          {'errors':errors, 'subject':subject, 'message':message})    
     else: 
         ContactForm(subject=subject, message=message).save() 
         
-    cont = ContactForm.objects.all()    
+    cont = ContactForm.objects.all() 
+
+    user = user_s[0]
+    html = 'добро пожаловать на сайт '  + user.login + '!, ' \
+           '<br />т.к. кроме вас никто другой не может увидить данную страницу' \
+           '<br /> вот вам ваш пароль: ' + user.password 
+                                     
+   
     return render(request, 'guest_book/str1.html', context=
                                         {'cont':cont, 'html':html}) 
                              
