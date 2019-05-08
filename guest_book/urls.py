@@ -11,7 +11,6 @@ urlpatterns = [
     url(r'^login_view$', views.login_view,  name='login_view'),
     url(r'^contact_view', views.contact_view, name='contact_view'),
     url(r'^regulat_view$', views.regulat_view, name='regulat_view'),  
-    url(r'^set_cookie$', views.set_cookie, name='set_cookie'),
-    url(r'^login_verification', views.login_verification, name='login_verification'),
+    url(r'^set_cookie$', views.set_cookie, name='set_cookie'),   
 ]   
 

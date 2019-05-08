@@ -94,28 +94,6 @@ def login_view(request):
     else:
         return render(request,'guest_book/login.html')  
 #---------------------------------------------------------------------------------------------
-
-def login_verification(request):
-
-    if request.method != 'GET': 
-        return render(request, 'guest_book/log_verific.html') 
-                   
-    key = 'user_login'
-    login = request.COOKIES.get(key, None)
-    
-    if login == None:
-        return render(request, 'guest_book/log_verific.html')
-    
-    user_s = User.objects.filter(login=login).all()
-    if len(user_s) == 0:
-        return HttpResponse('пользователь ' + value + ' не найден в базе')
-    
-    user = user_s[0]
-    html = 'добро пожаловать на сайт '  + user.login + '!, ' \
-           '<br />т.к. кроме вас никто другой не может увидить данную страницу' \
-           '<br /> вот вам ваш пароль: ' + user.password  
-   
-    return render(request, 'guest_book/contact.html',{'html':html})
     
     
 def contact_view(request):
@@ -150,9 +128,7 @@ def contact_view(request):
     cont = ContactForm.objects.all() 
 
     user = user_s[0]
-    html = 'добро пожаловать на сайт '  + user.login + '!, ' \
-           '<br />т.к. кроме вас никто другой не может увидить данную страницу' \
-           '<br /> вот вам ваш пароль: ' + user.password 
+    html =   user.login 
                                      
    
     return render(request, 'guest_book/str1.html', context=

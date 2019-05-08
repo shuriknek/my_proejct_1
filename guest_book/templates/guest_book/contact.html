@@ -18,7 +18,6 @@
            </td>
             <div align=center>
              <h3>Книга жалоб и предложений</h3>
-                  <p style="color:green">{{ html }}</p>
                <a href='#'>Поиск</a> || <a href="{% url 'regulat_view' %}">Правила</a>                      
                 <br><a href='#'>Только жалобы || предложения</a>
               <br><br>Всего сообщений: 00.<br>
@@ -30,6 +29,7 @@
      <br><br>
       <p style="color:red"> 'Добро пожаловать на сайт'!</p>
        <br><br>
+        <p style="color:green">{{ html }}</p>
         <h5>{{ form.message }}</h5>
          <br><br><br>
              {% if errors %}
