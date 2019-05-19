@@ -1,6 +1,6 @@
+           
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
 
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -112,12 +112,13 @@ def contact_view(request):
 
     if len(user_s) == 0:
         return HttpResponse('пользователь ' + value + ' не найден в базе')
-
-    elif request.method == 'POST':
+     
+    elif request.method == 'POST':  
         subject = request.POST.get('subject')   
         message = request.POST.get('message')
         now = datetime.datetime.now()
         html = "It is now %s." % now
+        image = (request.POST, request.FILES)
         
     if errors == None:
         return render(request, 'guest_book/contact.html',
@@ -132,12 +133,14 @@ def contact_view(request):
                                      
    
     return render(request, 'guest_book/str1.html', context=
-                                        {'cont':cont, 'html':html}) 
-                             
+                                        {'cont':cont, 'html':html, 'now':now, 'image':image}) 
+                         
                                                                                      
 def regulat_view(request):
     return render(request, 'guest_book/regulations.html')
 #------------------------------------------------------------------------------------             
+
+
 
          
         
